@@ -7,8 +7,12 @@ const authenticateUser = require('./middleware/auth');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
 app.use(express.json());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // --- ROUTES ---
 
@@ -52,7 +56,7 @@ app.get('/api/books/my-books', authenticateUser, async (req, res) => {
             .select('*')
             .eq('user_id', req.user.id)
             .order('created_at', { ascending: false });
-        
+
         if (error) throw error;
         res.json(data);
     } catch (err) {
@@ -72,7 +76,7 @@ app.post('/api/books', authenticateUser, async (req, res) => {
             .from('books')
             .insert([{ title, author, price, user_id: req.user.id }])
             .select();
-        
+
         if (error) throw error;
         res.status(201).json(data[0]);
     } catch (err) {
@@ -134,14 +138,14 @@ app.post('/api/requests', authenticateUser, async (req, res) => {
             .eq('book_id', book_id)
             .eq('buyer_id', req.user.id)
             .maybeSingle();
-        
+
         if (existingReq) return res.status(400).json({ error: "You have already requested this book" });
 
         const { data, error } = await supabase
             .from('requests')
             .insert([{ book_id, buyer_id: req.user.id }])
             .select();
-        
+
         if (error) throw error;
         res.status(201).json(data[0]);
     } catch (err) {
@@ -161,7 +165,7 @@ app.get('/api/requests/my-requests', authenticateUser, async (req, res) => {
             `)
             .eq('buyer_id', req.user.id)
             .order('created_at', { ascending: false });
-        
+
         if (error) throw error;
 
         // Fetch seller emails for accepted requests
@@ -196,7 +200,7 @@ app.get('/api/requests/incoming', authenticateUser, async (req, res) => {
         if (myBooks.length === 0) return res.json([]);
 
         const bookIds = myBooks.map(b => b.id);
-        
+
         const { data, error } = await supabase
             .from('requests')
             .select(`
