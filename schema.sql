@@ -20,7 +20,3 @@ CREATE TABLE IF NOT EXISTS public.requests (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Note: In this project, we handle database operations securely via our Node.js backend.
--- The backend uses the Supabase Service Role Key to bypass Row Level Security (RLS).
--- Therefore, we don't strictly need to enable RLS or write complex RLS policies for this basic setup.
--- If you want to interact with the database directly from the frontend later, you must enable RLS and write policies.
