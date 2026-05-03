@@ -15,7 +15,8 @@ const AddBook = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!session) {
-      return <div>Please login</div>;
+      alert('Please login first');
+      return;
     };
     setLoading(true);
     setError(null);
