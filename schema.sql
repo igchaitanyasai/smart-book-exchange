@@ -1,5 +1,5 @@
--- Run this SQL in your Supabase SQL Editor
-
+-- Run this SQL in your Supabase SQL Editor 
+-- Directly Create tables
 -- 1. Create Books Table
 CREATE TABLE IF NOT EXISTS public.books (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
